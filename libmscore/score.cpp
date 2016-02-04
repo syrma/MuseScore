@@ -2772,7 +2772,6 @@ void Score::cmdRemoveStaff(int staffIdx)
 
 void Score::sortStaves(QList<int>& dst)
       {
-      printf("sortStaves=====clear systems\n");
       systems().clear();  //??
       _parts.clear();
       Part* curPart = 0;

@@ -2896,7 +2896,7 @@ QString Text::convertToHtml(const QString& s, const TextStyle& st)
 //   accessibleInfo
 //---------------------------------------------------------
 
-QString Text::accessibleInfo()
+QString Text::accessibleInfo() const
       {
       QString rez;
       const QList<TextStyle>& ts = score()->style()->textStyles();
