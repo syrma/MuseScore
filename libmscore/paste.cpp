@@ -803,11 +803,11 @@ void Score::pasteSymbols(XmlReader& e, ChordRest* dst)
 //   cmdPaste
 //---------------------------------------------------------
 
-PasteStatus Score::cmdPaste(const QMimeData* ms, MuseScoreView* view)
+PasteState Score::cmdPaste(const QMimeData* ms, MuseScoreView* view)
       {
       if (ms == 0) {
             qDebug("no application mime data");
-            return PasteStatus::NO_MIME;
+            return PasteState::NO_MIME;
             }
       if ((_selection.isSingle() || _selection.isList()) && ms->hasFormat(mimeSymbolFormat)) {
             QByteArray data(ms->data(mimeSymbolFormat));
@@ -856,16 +856,16 @@ PasteStatus Score::cmdPaste(const QMimeData* ms, MuseScoreView* view)
                   Element* e = _selection.element();
                   if (e->type() != Element::Type::NOTE && !e->isChordRest()) {
                         qDebug("cannot paste to %s", e->name());
-                        return PasteStatus::DEST_NO_CR;
+                        return PasteState::DEST_NO_CR;
                         }
                   if (e->type() == Element::Type::NOTE)
                         e = static_cast<Note*>(e)->chord();
                   cr  = static_cast<ChordRest*>(e);
                   }
             if (cr == 0)
-                  return PasteStatus::NO_DEST;
+                  return PasteState::NO_DEST;
             else if (cr->tuplet())
-                  return PasteStatus::DEST_TUPLET;
+                  return PasteState::DEST_TUPLET;
             else {
                   QByteArray data(ms->data(mimeStaffListFormat));
                   if (MScore::debugMode)
@@ -874,7 +874,7 @@ PasteStatus Score::cmdPaste(const QMimeData* ms, MuseScoreView* view)
                   e.setPasteMode(true);
                   if (!pasteStaff(e, cr->segment(), cr->staffIdx())) {
                         qDebug("paste failed");
-                        return PasteStatus::TUPLET_CROSSES_BAR;
+                        return PasteState::TUPLET_CROSSES_BAR;
                         }
                   }
             }
@@ -886,16 +886,16 @@ PasteStatus Score::cmdPaste(const QMimeData* ms, MuseScoreView* view)
                   Element* e = _selection.element();
                   if (e->type() != Element::Type::NOTE && e->type() != Element::Type::REST && e->type() != Element::Type::CHORD) {
                         qDebug("cannot paste to %s", e->name());
-                        return PasteStatus::DEST_NO_CR;
+                        return PasteState::DEST_NO_CR;
                         }
                   if (e->type() == Element::Type::NOTE)
                         e = static_cast<Note*>(e)->chord();
                   cr  = static_cast<ChordRest*>(e);
                   }
             if (cr == 0)
-                  return PasteStatus::NO_DEST;
+                  return PasteState::NO_DEST;
             else if (cr->tuplet())
-                  return PasteStatus::DEST_TUPLET;
+                  return PasteState::DEST_TUPLET;
             else {
                   QByteArray data(ms->data(mimeSymbolListFormat));
                   if (MScore::debugMode)
@@ -940,6 +940,6 @@ PasteStatus Score::cmdPaste(const QMimeData* ms, MuseScoreView* view)
             foreach(const QString& s, ms->formats())
                   qDebug("  format %s", qPrintable(s));
             }
-      return PasteStatus::PS_NO_ERROR;
+      return PasteState::PS_NO_ERROR;
       }
 }

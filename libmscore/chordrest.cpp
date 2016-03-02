@@ -575,10 +575,10 @@ void ChordRest::layoutArticulations()
       for (int i = 0; i < n; ++i) {
             Articulation* a = _articulations.at(i);
             //
-            // determine MScore::Direction
+            // determine Direction
             //
-            if (a->direction() != MScore::Direction::AUTO) {
-                  a->setUp(a->direction() == MScore::Direction::UP);
+            if (a->direction() != Direction::AUTO) {
+                  a->setUp(a->direction() == Direction::UP);
                   }
             else {
                   if (a->anchor() == ArticulationAnchor::CHORD)
@@ -874,7 +874,7 @@ Element* ChordRest::drop(const DropData& data)
                   nval.headGroup = note->headGroup();
                   nval.fret = note->fret();
                   nval.string = note->string();
-                  score()->setNoteRest(segment(), track(), nval, data.duration, MScore::Direction::AUTO);
+                  score()->setNoteRest(segment(), track(), nval, data.duration, Direction::AUTO);
                   delete e;
                   }
                   break;
@@ -1253,7 +1253,7 @@ bool ChordRest::setProperty(P_ID propertyId, const QVariant& v)
             default:
                   return DurationElement::setProperty(propertyId, v);
             }
-      score()->setLayoutAll(true);
+      score()->setLayoutAll();
       return true;
       }
 
@@ -1269,7 +1269,7 @@ QVariant ChordRest::propertyDefault(P_ID propertyId) const
             case P_ID::STAFF_MOVE: return 0;
             default:          return DurationElement::propertyDefault(propertyId);
             }
-      score()->setLayoutAll(true);
+      score()->setLayoutAll();
       }
 
 //---------------------------------------------------------
