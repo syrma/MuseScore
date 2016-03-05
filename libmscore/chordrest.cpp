@@ -208,7 +208,7 @@ void ChordRest::writeProperties(Xml& xml) const
          || (actualDurationType().fraction() != duration())))
             xml.fTag("duration", duration());
 
-      foreach(const Articulation* a, _articulations)
+      for (const Articulation* a : _articulations)
             a->write(xml);
 #ifndef NDEBUG
       if (_beam && (MScore::testMode || !_beam->generated()))
@@ -217,7 +217,7 @@ void ChordRest::writeProperties(Xml& xml) const
       if (_beam && !_beam->generated())
             xml.tag("Beam", _beam->id());
 #endif
-      foreach(Lyrics* lyrics, _lyricsList) {
+      for (Lyrics* lyrics : _lyricsList) {
             if (lyrics)
                   lyrics->write(xml);
             }
