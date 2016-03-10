@@ -1190,7 +1190,7 @@ void ScoreView::measurePopup(const QPoint& gpos, Measure* obj)
             MeasureProperties im(obj);
             im.exec();
             }
-      if (_score->undo()->active()) {
+      if (_score->undoStack()->active()) {
             _score->setLayoutAll();
             _score->endCmd();
             }
@@ -2583,7 +2583,7 @@ void ScoreView::normalPaste()
                   break;
             case PasteState::TUPLET_CROSSES_BAR:
                   errorMessage->showMessage(tr("Tuplet cannot cross barlines"), "tupletCrossBar");
-                  _score->undo()->current()->unwind();
+                  _score->undoStack()->current()->unwind();
                   break;
             default:
                   ;
@@ -2941,9 +2941,7 @@ void ScoreView::cmd(const QAction* a)
       else if (cmd == "enh-down")
             cmdChangeEnharmonic(false);
       else if (cmd == "revision") {
-            Score* s = _score;
-            if (s->parentScore())
-                  s = s->parentScore();
+            Score* s = _score->masterScore();
             s->createRevision();
             }
       else if (cmd == "append-measure")
@@ -3230,7 +3228,7 @@ void ScoreView::cmd(const QAction* a)
 
 void ScoreView::showOmr(bool flag)
       {
-      _score->setShowOmr(flag);
+      _score->masterScore()->setShowOmr(flag);
       ScoreTab* t = mscore->getTab1();
       if (t->view() != this)
             t = mscore->getTab2();
@@ -4258,7 +4256,7 @@ void ScoreView::cmdAddSlur()
             is.setSlur(nullptr);
             return;
             }
-      bool undoActive = _score->undo()->active();
+      bool undoActive = _score->undoStack()->active();
       if (_score->selection().isRange()) {
             if (!undoActive)
                   _score->startCmd();
@@ -5045,7 +5043,7 @@ void ScoreView::midiNoteReceived(int pitch, bool chord, int velocity)
 
 qDebug("midiNoteReceived %d chord %d", pitch, chord);
       score()->enqueueMidiEvent(ev);
-      if (!score()->undo()->active())
+      if (!score()->undoStack()->active())
             cmd(0);
       }
 
