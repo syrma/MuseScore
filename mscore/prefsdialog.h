@@ -57,6 +57,8 @@ class PreferenceDialog : public QDialog, private Ui::PrefsDialogBase {
       void selectInstrumentList2();
       void selectStartWith();
       void resetShortcutClicked();
+      void importShortcutsClicked();
+      void exportShortcutsClicked();
       void clearShortcutClicked();
       void defineShortcutClicked();
       void portaudioApiActivated(int idx);

@@ -163,7 +163,9 @@ class Shortcut {
 
       static void init();
       static void load();
+      static void load(QFile& f);
       static void save();
+      static void save(QFile& f);
       static void resetToDefault();
       static bool dirty;
       static Shortcut* getShortcut(const char* key);

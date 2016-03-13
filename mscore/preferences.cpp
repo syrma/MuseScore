@@ -614,6 +614,8 @@ PreferenceDialog::PreferenceDialog(QWidget* parent)
 
       connect(shortcutList,   SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(defineShortcutClicked()));
       connect(resetShortcut,  SIGNAL(clicked()), SLOT(resetShortcutClicked()));
+      connect(importShortcuts,  SIGNAL(clicked()), SLOT(importShortcutsClicked()));
+      connect(exportShortcuts,  SIGNAL(clicked()), SLOT(exportShortcutsClicked()));
       connect(clearShortcut,  SIGNAL(clicked()), SLOT(clearShortcutClicked()));
       connect(defineShortcut, SIGNAL(clicked()), SLOT(defineShortcutClicked()));
       connect(resetToDefault, SIGNAL(clicked()), SLOT(resetAllValues()));
@@ -1055,6 +1057,42 @@ void PreferenceDialog::resetShortcutClicked()
 
       active->setText(1, shortcut->keysToString());
       shortcutsChanged = true;
+      }
+
+//---------------------------------------------------------
+//   importShortcutsClicked
+//    import shortcut preferences from a file
+//---------------------------------------------------------
+
+void PreferenceDialog::importShortcutsClicked()
+      {
+      QString fn = QFileDialog::getOpenFileName(this, tr("Import Shortcuts"), "shortcuts.xml", tr("Shortcuts file (*.xml)"));
+      if(fn.isEmpty())
+            return;
+
+      QFile f(fn);
+      Shortcut::load(f);
+
+      shortcutsChanged = true;
+      qDeleteAll(localShortcuts);
+      localShortcuts.clear();
+      foreach(const Shortcut* s, Shortcut::shortcuts())
+            localShortcuts[s->key()] = new Shortcut(*s);
+      updateSCListView();
+      }
+
+//---------------------------------------------------------
+//   exportShortcutsClicked
+//    export shortcut preferences to a file
+//---------------------------------------------------------
+
+void PreferenceDialog::exportShortcutsClicked()
+      {
+      QString fn = QFileDialog::getSaveFileName(this, tr("Export Shortcuts"), "shortcuts.xml", tr("Shortcuts file (*.xml)"));
+      if(fn.isEmpty())
+            return;
+      QFile f(fn);
+      Shortcut::save(f);
       }
 
 //---------------------------------------------------------

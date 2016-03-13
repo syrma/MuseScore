@@ -3536,6 +3536,11 @@ void Shortcut::init()
 void Shortcut::save()
       {
       QFile f(dataPath + "/shortcuts.xml");
+      save(f);
+      }
+
+void Shortcut::save(QFile& f)
+      {
       if (!f.open(QIODevice::WriteOnly)) {
             qDebug("cannot save shortcuts");
             return;
@@ -3600,6 +3605,11 @@ void Shortcut::read(XmlReader& e)
 void Shortcut::load()
       {
       QFile f(dataPath + "/shortcuts.xml");
+      load(f);
+      }
+
+void Shortcut::load(QFile& f)
+      {
       if (!f.exists())
             f.setFileName(":/data/shortcuts.xml");
       if (!f.open(QIODevice::ReadOnly)) {
